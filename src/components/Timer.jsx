@@ -85,11 +85,15 @@ const Timer = () => {
             <div className="set-timer">
                 {formatTime(0, timerMinute, timerSecond)}
             </div>
-            {time}
+            <div className="timer-text">
+                {time}
+            </div>
             <form className="set-timer-wrapper">
                 <label>
                     Set Minute
+                    <span> </span>
                     <input
+                        className="set-timer-text"
                         name="setMinute"
                         type="number"
                         min="0"
@@ -101,7 +105,9 @@ const Timer = () => {
                 </label>
                 <label>
                     Set Second
+                    <span> </span>
                     <input
+                        className="set-timer-text"
                         name="setSecond"
                         type="number"
                         min="0"
@@ -112,8 +118,9 @@ const Timer = () => {
                     />
                 </label>
             </form>
-            <button onClick={setTimer}>Set Time</button>
-            <button onClick={reset}>Start</button>
+            <button className="timer-button" onClick={setTimer}>Set Time</button>
+            <br/>
+            <button className="timer-button blue large" onClick={reset}>Start</button>
         </div>
     );
 };

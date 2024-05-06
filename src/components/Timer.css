@@ -4,7 +4,10 @@
 
     padding: 1rem;
     width: 80%;
-    max-width: 10rem;
+    max-width: 40rem;
+
+    border: 1px solid black;
+    border-radius: 1em;
 }
 
 .set-timer {
@@ -12,7 +15,39 @@
     color: grey;
 }
 
+.timer-text {
+    font-size: 2rem;
+    color: black;
+    font-weight: bolder;
+}
+
 .set-timer-wrapper {
     display: flex;
     flex-direction: column;
+    padding: 1rem;
+}
+ 
+.set-timer-text {
+    border: none;
+    background-color: lightgrey;
+    text-align: right;
+}
+
+.timer-button {
+    padding: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.timer-button:hover {
+    filter: brightness(0.8);
+}
+
+.timer-button.blue {
+    background-color:lightblue;
+}
+
+.timer-button.large {
+    font-size: 1.5rem;
 }
