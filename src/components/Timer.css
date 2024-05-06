@@ -1,0 +1,18 @@
+.timer-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    padding: 1rem;
+    width: 80%;
+    max-width: 10rem;
+}
+
+.set-timer {
+    font-size: 0.8rem;
+    color: grey;
+}
+
+.set-timer-wrapper {
+    display: flex;
+    flex-direction: column;
+}
