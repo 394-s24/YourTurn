@@ -14,6 +14,8 @@ const Timer = () => {
     const [currentUserIndex, setCurrentUserIndex] = useState(0); 
     const [currentUser, setCurrentUser] = useState(names[currentUserIndex].name); 
 
+    const [nextUser, setNextUser] = useState(names[((currentUserIndex+1) % names.length)].name); 
+
     const ref = useRef(null);
 
     const remainingTime = (e) => {
@@ -85,6 +87,8 @@ const Timer = () => {
         // setting names
         setCurrentUserIndex(previousIndex => (previousIndex + 1) % names.length);
         setCurrentUser(names[currentUserIndex].name);
+        
+        setNextUser(names[((currentUserIndex+1) % names.length)].name);
     };
 
     const setTimer = () => {
@@ -137,6 +141,8 @@ const Timer = () => {
             <div>
                 <h1>Current User</h1>
                 <p>{currentUser}</p>
+                <h2>Next User </h2>
+                <p>{nextUser}</p>
             </div>
         </div>
         
