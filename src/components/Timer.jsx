@@ -1,12 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Timer.css';
 
+import names from '../names.json';
+
+
 const Timer = () => {
     const [time, setTime] = useState('00:00:00');
     const [timerMinute, setTimerMinute] = useState(0);
     const [timerSecond, setTimerSecond] = useState(10);
     const [timerMinuteSet, setTimerMinuteSet] = useState(timerMinute);
     const [timerSecondSet, setTimerSecondSet] = useState(timerSecond);
+
+    const [currentUserIndex, setCurrentUserIndex] = useState(0); 
+    const [currentUser, setCurrentUser] = useState(names[currentUserIndex].name); 
+
     const ref = useRef(null);
 
     const remainingTime = (e) => {
@@ -71,8 +78,13 @@ const Timer = () => {
     //     clear(setDeadline());
     // }, [timerMinute, timerSecond]);
 
+
     const reset = () => {
         clear(setDeadline());
+
+        // setting names
+        setCurrentUserIndex(previousIndex => (previousIndex + 1) % names.length);
+        setCurrentUser(names[currentUserIndex].name);
     };
 
     const setTimer = () => {
@@ -121,7 +133,13 @@ const Timer = () => {
             <button className="timer-button" onClick={setTimer}>Set Time</button>
             <br/>
             <button className="timer-button blue large" onClick={reset}>Start</button>
+
+            <div>
+                <h1>Current User</h1>
+                <p>{currentUser}</p>
+            </div>
         </div>
+        
     );
 };
 
