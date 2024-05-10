@@ -11,10 +11,7 @@ const Timer = () => {
     const [timerMinuteSet, setTimerMinuteSet] = useState(timerMinute);
     const [timerSecondSet, setTimerSecondSet] = useState(timerSecond);
 
-    const [currentUserIndex, setCurrentUserIndex] = useState(0); 
-    const [currentUser, setCurrentUser] = useState(names[currentUserIndex].name); 
-
-    const [nextUser, setNextUser] = useState(names[((currentUserIndex+1) % names.length)].name); 
+    const [users, setUsers] = useState(names); 
 
     const ref = useRef(null);
 
@@ -85,10 +82,13 @@ const Timer = () => {
         clear(setDeadline());
 
         // setting names
-        setCurrentUserIndex(previousIndex => (previousIndex + 1) % names.length);
-        setCurrentUser(names[currentUserIndex].name);
+        //setCurrentUserIndex(previousIndex => (previousIndex + 1) % names.length);
+        //setCurrentUser(names[currentUserIndex].name);
         
-        setNextUser(names[((currentUserIndex+1) % names.length)].name);
+        let users2 = users;
+        users2.push(users2.shift());
+        console.log(users2);
+        setUsers(users2);
     };
 
     const setTimer = () => {
@@ -140,9 +140,8 @@ const Timer = () => {
 
             <div>
                 <h1>Current User</h1>
-                <p>{currentUser}</p>
-                <h2>Next User </h2>
-                <p>{nextUser}</p>
+                <p><b>{users[0].name}</b></p>
+                <p>{users[1].name}</p>
             </div>
         </div>
         
