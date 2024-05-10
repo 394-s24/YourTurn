@@ -96,6 +96,12 @@ const Timer = () => {
         setTimerSecond(timerSecondSet);
     }
 
+    const queueMembers = names.map((user, index) => {
+        if(index > 0){
+            return <p>{user.name}</p>;
+        }
+    })
+
     return (
         <div className="timer-wrapper">
             <div className="set-timer">
@@ -141,7 +147,7 @@ const Timer = () => {
             <div>
                 <h1>Current User</h1>
                 <p><b>{users[0].name}</b></p>
-                <p>{users[1].name}</p>
+                {queueMembers}
             </div>
         </div>
         
