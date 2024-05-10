@@ -5,66 +5,73 @@ import names from '../names.json';
 
 
 const Timer = () => {
-    const [time, setTime] = useState('00:00:00');
+    const [time, setTime] = useState(0);
     const [timerMinute, setTimerMinute] = useState(0);
     const [timerSecond, setTimerSecond] = useState(10);
     const [timerMinuteSet, setTimerMinuteSet] = useState(timerMinute);
     const [timerSecondSet, setTimerSecondSet] = useState(timerSecond);
 
-    const [users, setUsers] = useState(names); 
+    const [isRunning, setIsRunning] = useState(true);
+    const [users, setUsers] = useState(names);
 
     const ref = useRef(null);
 
-    const remainingTime = (e) => {
-        const totalTime = Date.parse(e) - Date.parse(new Date());
-        const hours = Math.floor((totalTime / 1000 / 60 / 60) % 24);
-        const minutes = Math.floor((totalTime / 1000 / 60) % 60);
-        const seconds = Math.floor((totalTime / 1000) % 60);
-        return {
-            totalTime,
-            hours,
-            minutes,
-            seconds,
-        };
-    };
+    // const remainingTime = (e) => {
+    //     const totalTime = Date.parse(e) - Date.parse(new Date());
+    //     const hours = Math.floor((totalTime / 1000 / 60 / 60) % 24);
+    //     const minutes = Math.floor((totalTime / 1000 / 60) % 60);
+    //     const seconds = Math.floor((totalTime / 1000) % 60);
+    //     return {
+    //         totalTime,
+    //         hours,
+    //         minutes,
+    //         seconds,
+    //     };
+    // };
 
-    const start = (e) => {
-        const { totalTime, hours, minutes, seconds } = remainingTime(e);
-        if (totalTime >= 0) {
-            let displayTime = formatTime(hours, minutes, seconds);
-            setTime(displayTime);
+    const formatTime = (seconds) => {
+        // add leading 0s if needed
+        let minutes = Math.floor(seconds / 60);
+        seconds -= minutes * 60;
+
+        let hours = Math.floor(minutes / 60);
+        minutes -= hours * 60
+
+        if (hours <= 9) {
+            hours = '0' + hours;
         }
-    };
-
-    const formatTime = (hours, minutes, seconds) => {
-        if (hours + minutes + seconds >= 0) {
-            // add leading 0s if needed
-            if (hours <= 9) {
-                hours = '0' + hours;
-            }
-            if (minutes <= 9) {
-                minutes = '0' + minutes;
-            }
-            if (seconds <= 9) {
-                seconds = '0' + seconds;
-            }
+        if (minutes <= 9) {
+            minutes = '0' + minutes;
+        }
+        if (seconds <= 9) {
+            seconds = '0' + seconds;
         }
 
         return hours + ':' + minutes + ':' + seconds;
     };
 
     const clear = (e) => {
-        let displayTime = formatTime(0, timerMinute, timerSecond);
-        setTime(displayTime);
-
+        setIsRunning(true)
+        setTime(timerMinute * 60 + timerSecond);
         if (ref.current) {
             clearInterval(ref.current);
         }
+        start()
+    };
+
+    const start = () => {
         const id = setInterval(() => {
-            start(e);
+            setTime(prevTime => {
+                if (prevTime > 0) {
+                    return prevTime - 1;
+                } else {
+                    clearInterval(id); // Clear interval when time reaches 0
+                    return 0;
+                }
+            });
         }, 1000);
         ref.current = id;
-    };
+    }
 
     const setDeadline = () => {
         let deadline = new Date();
@@ -84,7 +91,7 @@ const Timer = () => {
         // setting names
         //setCurrentUserIndex(previousIndex => (previousIndex + 1) % names.length);
         //setCurrentUser(names[currentUserIndex].name);
-        
+
         let users2 = users;
         users2.push(users2.shift());
         console.log(users2);
@@ -96,8 +103,22 @@ const Timer = () => {
         setTimerSecond(timerSecondSet);
     }
 
+    const toggleTimer = () => {
+        setIsRunning(!isRunning)
+        if (isRunning) {
+            console.log("Pausing timer")
+            clearInterval(ref.current)
+        } else {
+            if (ref.current) {
+                clearInterval(ref.current);
+            }
+            console.log("Resuming Timer")
+            start()
+        }
+    }
+
     const queueMembers = names.map((user, index) => {
-        if(index > 0){
+        if (index > 0) {
             return <p>{user.name}</p>;
         }
     })
@@ -105,10 +126,10 @@ const Timer = () => {
     return (
         <div className="timer-wrapper">
             <div className="set-timer">
-                {formatTime(0, timerMinute, timerSecond)}
+                {formatTime(timerSecond + timerMinute * 60)}
             </div>
             <div className="timer-text">
-                {time}
+                {formatTime(time)}
             </div>
             <form className="set-timer-wrapper">
                 <label>
@@ -141,16 +162,18 @@ const Timer = () => {
                 </label>
             </form>
             <button className="timer-button" onClick={setTimer}>Set Time</button>
-            <br/>
+            <button className="timer-button" onClick={toggleTimer}>{isRunning ? "Pause" : "Resume"}</button>
+            <br />
             <button className="timer-button blue large" onClick={reset}>Start</button>
 
             <div>
                 <h1>Current User</h1>
                 <p><b>{users[0].name}</b></p>
+                <h2>Next</h2>
                 {queueMembers}
             </div>
         </div>
-        
+
     );
 };
 
