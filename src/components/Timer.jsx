@@ -3,6 +3,8 @@ import './Timer.css';
 
 import names from '../names.json';
 
+// 2-minute warning
+import toast, { Toaster } from 'react-hot-toast';
 
 const Timer = () => {
     const [time, setTime] = useState(0);
@@ -16,6 +18,16 @@ const Timer = () => {
 
     const ref = useRef(null);
 
+    const warningToast = () => toast('2 minutes remaining!');  // May need to generalize?
+
+    useEffect(() => {
+        // 2min warning is in a useEffect, bc toast can cause a state update while Timer 
+        // is still rendering causing a warning in the console.
+        if (time === 120) {
+            warningToast();
+        }
+    }, [time]);
+    
     // const remainingTime = (e) => {
     //     const totalTime = Date.parse(e) - Date.parse(new Date());
     //     const hours = Math.floor((totalTime / 1000 / 60 / 60) % 24);
@@ -125,6 +137,8 @@ const Timer = () => {
 
     return (
         <div className="timer-wrapper">
+            {/* Toaster needed for 2min warning */}
+            <Toaster />
             <div className="set-timer">
                 {formatTime(timerSecond + timerMinute * 60)}
             </div>
