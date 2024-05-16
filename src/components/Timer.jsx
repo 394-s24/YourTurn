@@ -1,74 +1,56 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { getDatabase, ref as rref, onValue } from "firebase/database";
 import './Timer.css';
-
 import names from '../names.json';
-
-// 2-minute warning
+import { useParams } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 
-const Timer = () => {
+const Timer = ({ db }) => {
     const [time, setTime] = useState(0);
     const [timerMinute, setTimerMinute] = useState(0);
     const [timerSecond, setTimerSecond] = useState(10);
     const [timerMinuteSet, setTimerMinuteSet] = useState(timerMinute);
     const [timerSecondSet, setTimerSecondSet] = useState(timerSecond);
-
     const [isRunning, setIsRunning] = useState(true);
-    const [users, setUsers] = useState(names);
-
+    const [users, setUsers] = useState([""]);
     const ref = useRef(null);
-
-    const warningToast = () => toast('2 minutes remaining!');  // May need to generalize?
+    const params = useParams();
 
     useEffect(() => {
-        // 2min warning is in a useEffect, bc toast can cause a state update while Timer 
-        // is still rendering causing a warning in the console.
+        const membersRef = rref(db, 'swarmUrls/' + params.swarmUrl);
+        const unsubscribe = onValue(membersRef, (snapshot) => {
+            const data = snapshot.val();
+            setUsers(data.members || []);
+        });
+        return () => unsubscribe();
+    }, [db, params.swarmUrl]);
+
+    const warningToast = () => toast('2 minutes remaining!');
+
+    useEffect(() => {
         if (time === 120) {
             warningToast();
         }
     }, [time]);
-    
-    // const remainingTime = (e) => {
-    //     const totalTime = Date.parse(e) - Date.parse(new Date());
-    //     const hours = Math.floor((totalTime / 1000 / 60 / 60) % 24);
-    //     const minutes = Math.floor((totalTime / 1000 / 60) % 60);
-    //     const seconds = Math.floor((totalTime / 1000) % 60);
-    //     return {
-    //         totalTime,
-    //         hours,
-    //         minutes,
-    //         seconds,
-    //     };
-    // };
 
     const formatTime = (seconds) => {
-        // add leading 0s if needed
         let minutes = Math.floor(seconds / 60);
         seconds -= minutes * 60;
-
         let hours = Math.floor(minutes / 60);
-        minutes -= hours * 60
-
-        if (hours <= 9) {
-            hours = '0' + hours;
-        }
-        if (minutes <= 9) {
-            minutes = '0' + minutes;
-        }
-        if (seconds <= 9) {
-            seconds = '0' + seconds;
-        }
-
-        return hours + ':' + minutes + ':' + seconds;
+        minutes -= hours * 60;
+        if (hours <= 9) hours = '0' + hours;
+        if (minutes <= 9) minutes = '0' + minutes;
+        if (seconds <= 9) seconds = '0' + seconds;
+        return `${hours}:${minutes}:${seconds}`;
     };
 
-    const clear = (e) => {
-        setIsRunning(true)
+    const clear = () => {
+        setIsRunning(true);
         setTime(timerMinute * 60 + timerSecond);
         if (ref.current) {
             clearInterval(ref.current);
         }
-        start()
+        start();
     };
 
     const start = () => {
@@ -77,13 +59,13 @@ const Timer = () => {
                 if (prevTime > 0) {
                     return prevTime - 1;
                 } else {
-                    clearInterval(id); // Clear interval when time reaches 0
+                    clearInterval(id);
                     return 0;
                 }
             });
         }, 1000);
         ref.current = id;
-    }
+    };
 
     const setDeadline = () => {
         let deadline = new Date();
@@ -92,52 +74,36 @@ const Timer = () => {
         return deadline;
     };
 
-    // useEffect(() => {
-    //     clear(setDeadline());
-    // }, [timerMinute, timerSecond]);
-
-
     const reset = () => {
         clear(setDeadline());
-
-        // setting names
-        //setCurrentUserIndex(previousIndex => (previousIndex + 1) % names.length);
-        //setCurrentUser(names[currentUserIndex].name);
-
-        let users2 = users;
+        let users2 = [...users];
         users2.push(users2.shift());
-        console.log(users2);
         setUsers(users2);
     };
 
     const setTimer = () => {
         setTimerMinute(timerMinuteSet);
         setTimerSecond(timerSecondSet);
-    }
+    };
 
     const toggleTimer = () => {
-        setIsRunning(!isRunning)
+        setIsRunning(!isRunning);
         if (isRunning) {
-            console.log("Pausing timer")
-            clearInterval(ref.current)
+            clearInterval(ref.current);
         } else {
             if (ref.current) {
                 clearInterval(ref.current);
             }
-            console.log("Resuming Timer")
-            start()
+            start();
         }
-    }
+    };
 
-    const queueMembers = names.map((user, index) => {
-        if (index > 0) {
-            return <p>{user.name}</p>;
-        }
-    })
+    const queueMembers = users.slice(1).map((user, index) => (
+        <p key={index}>{user}</p>
+    ));
 
     return (
         <div className="timer-wrapper">
-            {/* Toaster needed for 2min warning */}
             <Toaster />
             <div className="set-timer">
                 {formatTime(timerSecond + timerMinute * 60)}
@@ -182,12 +148,11 @@ const Timer = () => {
 
             <div>
                 <h1>Current User</h1>
-                <p><b>{users[0].name}</b></p>
+                <p><b>{users[0]}</b></p>
                 <h2>Next</h2>
                 {queueMembers}
             </div>
         </div>
-
     );
 };
 

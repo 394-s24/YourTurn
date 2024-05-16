@@ -2,6 +2,9 @@ import { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Timer from './components/Timer';
+import Home from './components/Home';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { getDatabase } from "firebase/database";
 
 
 // firebase import
@@ -23,13 +26,19 @@ const app = initializeApp(firebaseConfig);
 
 const App = () => {
   const [count, setCount] = useState(0);
+  const database = getDatabase(app);
 
   return (
     <div className="App">
       <header className="App-header">
         YourTurn
       </header>
-      <Timer></Timer>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home db={database}/>}/>
+          <Route path="/swarm/:swarmUrl" element={<Timer db={database} />}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 };

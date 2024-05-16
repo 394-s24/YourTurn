@@ -1,0 +1,21 @@
+.home-option-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin: 0.5rem;
+    border-radius: 1em;
+    border: 1px solid black;
+}
+
+.option-button {
+    padding: 1rem;
+    margin: 0.5rem;
+
+    background-color: lightblue;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.option-button:hover {
+    filter: brightness(0.8);
+}
