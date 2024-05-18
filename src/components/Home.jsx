@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { ref, set } from "firebase/database";
+import { ref, set, child, get, push, update } from "firebase/database";
 import { v4 as uuidv4 } from 'uuid';
 import "./Home.css";
 
 const Home = ({ db }) => {
     const [userName, setUserName] = useState(""); // New state for the user name
+    const [roomCode, setRoomCode] = useState("");
 
     const makeid = (length) => {
         let result = '';
@@ -32,8 +33,52 @@ const Home = ({ db }) => {
         set(ref(db, 'swarms/' + joinID), {
             url: swarmURL,
         }).then(() => set(ref(db, "swarmUrls/" + swarmURL), {
-            members: [userName]
+            members: [userName],
+            roomCode: joinID
         })).then(() => window.location.href = "/swarm/" + swarmURL);
+    }
+
+    const joinSwarm = async () => {
+        if (!userName) {
+            alert("Please enter a name before creating a swarm.");
+            return;
+        }
+
+        if (!roomCode) {
+            alert("Please enter a valid room code")
+        }
+        console.log("Joining swarm: ", roomCode);
+        const dbRef = ref(db)
+        get(child(dbRef, `swarms/${roomCode}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                const swarmURL = data.url;
+                get(child(dbRef, `swarmUrls/${swarmURL}`)).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        let swarmMembers = data.members;
+                        const roomCode = data.roomCode;
+                        if (!swarmMembers.includes(userName)) {
+                            swarmMembers.push(userName)
+                            const updates = {
+                                members: swarmMembers,
+                                roomCode: roomCode
+                            }
+                            update(child(dbRef, `swarmUrls/${swarmURL}`), updates)
+                                .then(() => window.location.href = "/swarm/" + swarmURL);
+                        } else {
+                            alert(`swarm already contains member with username ${userName}`)
+                        }
+                    } else {
+                        console.log(`Room code exists but no swarm found`)
+                    }
+                })
+            } else {
+                alert(`No Swarm with code ${roomCode} currently active`)
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
     }
 
     return (
@@ -48,14 +93,15 @@ const Home = ({ db }) => {
                 className="name-input"
             />
             <div className="home-option-wrapper">
-                <div className="option-label">
+                <textarea
+                    value={roomCode}
+                    onChange={(e) => setRoomCode(e.target.value)}
+                    placeholder="Enter room code"
+                    className="name-input"
+                    maxlength="5"
+                />
+                <div className="option-button" onClick={joinSwarm}>
                     Join a Swarm
-                </div>
-                <div className="">
-                    {/* Add join swarm logic here */}
-                </div>
-                <div className="option-button">
-                    Join
                 </div>
             </div>
             <div className="home-option-wrapper">

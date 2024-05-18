@@ -13,14 +13,20 @@ const Timer = ({ db }) => {
     const [timerSecondSet, setTimerSecondSet] = useState(timerSecond);
     const [isRunning, setIsRunning] = useState(true);
     const [users, setUsers] = useState([""]);
+    const [roomCode, setRoomCode] = useState("");
+
     const ref = useRef(null);
     const params = useParams();
+
+
 
     useEffect(() => {
         const membersRef = rref(db, 'swarmUrls/' + params.swarmUrl);
         const unsubscribe = onValue(membersRef, (snapshot) => {
             const data = snapshot.val();
+            console.log(data)
             setUsers(data.members || []);
+            setRoomCode(data.roomCode || []);
         });
         return () => unsubscribe();
     }, [db, params.swarmUrl]);
@@ -105,6 +111,7 @@ const Timer = ({ db }) => {
     return (
         <div className="timer-wrapper">
             <Toaster />
+            <h2>{roomCode}</h2>
             <div className="set-timer">
                 {formatTime(timerSecond + timerMinute * 60)}
             </div>
