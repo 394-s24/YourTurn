@@ -4,6 +4,7 @@ import './Timer.css';
 import names from '../names.json';
 import { useParams } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const Timer = ({ db }) => {
     const [time, setTime] = useState(0);
@@ -18,7 +19,7 @@ const Timer = ({ db }) => {
     const ref = useRef(null);
     const params = useParams();
 
-
+    const db = getFirestore(app);
 
     useEffect(() => {
         const membersRef = rref(db, 'swarmUrls/' + params.swarmUrl);
@@ -70,6 +71,13 @@ const Timer = ({ db }) => {
                 }
             });
         }, 1000);
+        setDoc(doc(db, "countdown"), {
+            startAt: ServerValue.TIMESTAMP,
+            hours: timerHour,
+            minutes: timerMinute,
+            seconds: timerSecond,
+            running: true,
+        });          
         ref.current = id;
     };
 
