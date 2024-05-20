@@ -32,11 +32,24 @@ const Timer = ({ db }) => {
         return () => unsubscribe();
     }, [db, params.swarmUrl]);
 
-    const warningToast = () => toast('2 minutes remaining!');
+    const twoMinuteWarning = () => {
+        toast('2 minutes remaining!');
+        const sound = new Audio('../../public/sounds/twoMinuteWarning.mp3'); 
+        sound.play();
+    };
+
+    const timerComplete = () => {
+        toast('Rotation Over!');
+        const sound = new Audio('../../public/sounds/timerComplete.mp3'); 
+        sound.play();
+    };
 
     useEffect(() => {
         if (time === 120) {
-            warningToast();
+            twoMinuteWarning();
+        }
+        if (time === 0) {
+            timerComplete();
         }
     }, [time]);
 
