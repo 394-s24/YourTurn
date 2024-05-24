@@ -34,7 +34,14 @@ const Home = ({ db }) => {
             url: swarmURL,
         }).then(() => set(ref(db, "swarmUrls/" + swarmURL), {
             members: [userName],
-            roomCode: joinID
+            roomCode: joinID,
+            timerState: {
+                time: 0,
+                timerMinute: 0,
+                timerSecond: 10,
+                isRunning: true,
+                stamp: 0
+            }
         })).then(() => window.location.href = "/swarm/" + swarmURL);
     }
 
@@ -98,7 +105,7 @@ const Home = ({ db }) => {
                     onChange={(e) => setRoomCode(e.target.value)}
                     placeholder="Enter room code"
                     className="name-input"
-                    maxlength="5"
+                    maxLength="5"
                 />
                 <div className="option-button" onClick={joinSwarm}>
                     Join a Swarm

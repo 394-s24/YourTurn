@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { getDatabase, ref as rref, onValue } from "firebase/database";
-import './Timer.css';
-import names from '../names.json';
+import { getDatabase, ref as rref, onValue, update, child } from "firebase/database";
 import { useParams } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import './Timer.css';
+import names from '../names.json';
 
 const Timer = ({ db }) => {
+    // State variables
+    const [stamp, setStamp] = useState(0);
     const [time, setTime] = useState(0);
     const [timerMinute, setTimerMinute] = useState(0);
     const [timerSecond, setTimerSecond] = useState(10);
@@ -15,35 +16,70 @@ const Timer = ({ db }) => {
     const [isRunning, setIsRunning] = useState(true);
     const [users, setUsers] = useState([""]);
     const [roomCode, setRoomCode] = useState("");
+    const [initialLoad, setInitialLoad] = useState(false);
 
     const ref = useRef(null);
     const params = useParams();
 
-    const db = getFirestore(app);
-
+    // Effect to load timer state from Firebase
     useEffect(() => {
         const membersRef = rref(db, 'swarmUrls/' + params.swarmUrl);
         const unsubscribe = onValue(membersRef, (snapshot) => {
             const data = snapshot.val();
-            console.log(data)
             setUsers(data.members || []);
             setRoomCode(data.roomCode || []);
+
+            const timerState = data.timerState;
+            setTime(timerState.time);
+            setTimerMinute(timerState.timerMinute);
+            setTimerSecond(timerState.timerSecond);
+            setIsRunning(timerState.isRunning);
+            setStamp(timerState.stamp);
+
+            setInitialLoad(true);
+
+            if (isRunning) {
+                tick();
+            } else {
+                clearInterval(ref.current);
+            }
         });
+
         return () => unsubscribe();
-    }, [db, params.swarmUrl]);
+    }, [db, params.swarmUrl, isRunning]);
 
-    const twoMinuteWarning = () => {
-        toast('2 minutes remaining!');
-        const sound = new Audio('../../public/sounds/twoMinuteWarning.mp3'); 
-        sound.play();
+    // Effect to update Firebase with the new timer state
+    useEffect(() => {
+        if (initialLoad) {
+            updateTimerState();
+        }
+    }, [timerMinute, timerSecond, isRunning, stamp, initialLoad]);
+
+    // Function to update the timer state in Firebase
+    const updateTimerState = () => {
+        const dbRef = rref(db);
+        const updates = {
+            members: users,
+            roomCode: roomCode,
+            timerState: {
+                time: time,
+                timerMinute: timerMinute,
+                timerSecond: timerSecond,
+                isRunning: isRunning,
+                stamp: stamp
+            }
+        };
+
+        if (!Object.values(updates.timerState).includes(undefined)) {
+            update(child(dbRef, `swarmUrls/${params.swarmUrl}`), updates)
+                .then(() => console.log("updated"))
+                .catch((error) => console.error("Update failed:", error));
+        } else {
+            console.error("Update failed: values argument contains undefined", updates);
+        }
     };
 
-    const timerComplete = () => {
-        toast('Rotation Over!');
-        const sound = new Audio('../../public/sounds/timerComplete.mp3'); 
-        sound.play();
-    };
-
+    // Effect to handle timer warnings and completion
     useEffect(() => {
         if (time === 120) {
             twoMinuteWarning();
@@ -53,6 +89,20 @@ const Timer = ({ db }) => {
         }
     }, [time]);
 
+    // Timer warning and completion functions
+    const twoMinuteWarning = () => {
+        toast('2 minutes remaining!');
+        const sound = new Audio('../../public/sounds/twoMinuteWarning.mp3');
+        sound.play();
+    };
+
+    const timerComplete = () => {
+        toast('Rotation Over!');
+        const sound = new Audio('../../public/sounds/timerComplete.mp3');
+        sound.play();
+    };
+
+    // Function to format time
     const formatTime = (seconds) => {
         let minutes = Math.floor(seconds / 60);
         seconds -= minutes * 60;
@@ -64,16 +114,13 @@ const Timer = ({ db }) => {
         return `${hours}:${minutes}:${seconds}`;
     };
 
-    const clear = () => {
+    // Timer control functions
+    const start = () => {
         setIsRunning(true);
-        setTime(timerMinute * 60 + timerSecond);
-        if (ref.current) {
-            clearInterval(ref.current);
-        }
-        start();
     };
 
-    const start = () => {
+    const tick = () => {
+        clearInterval(ref.current);
         const id = setInterval(() => {
             setTime(prevTime => {
                 if (prevTime > 0) {
@@ -84,28 +131,16 @@ const Timer = ({ db }) => {
                 }
             });
         }, 1000);
-        setDoc(doc(db, "countdown"), {
-            startAt: ServerValue.TIMESTAMP,
-            hours: timerHour,
-            minutes: timerMinute,
-            seconds: timerSecond,
-            running: true,
-        });          
         ref.current = id;
     };
 
-    const setDeadline = () => {
-        let deadline = new Date();
-        deadline.setMinutes(deadline.getMinutes() + timerMinute);
-        deadline.setSeconds(deadline.getSeconds() + timerSecond);
-        return deadline;
-    };
-
     const reset = () => {
-        clear(setDeadline());
+        setStamp(stamp + 1);
         let users2 = [...users];
         users2.push(users2.shift());
         setUsers(users2);
+        setTime(timerMinute * 60 + timerSecond);
+        start();
     };
 
     const setTimer = () => {
@@ -115,20 +150,13 @@ const Timer = ({ db }) => {
 
     const toggleTimer = () => {
         setIsRunning(!isRunning);
-        if (isRunning) {
-            clearInterval(ref.current);
-        } else {
-            if (ref.current) {
-                clearInterval(ref.current);
-            }
-            start();
-        }
     };
 
     const queueMembers = users.slice(1).map((user, index) => (
         <p key={index}>{user}</p>
     ));
 
+    // Component render
     return (
         <div className="timer-wrapper">
             <Toaster />
@@ -149,9 +177,7 @@ const Timer = ({ db }) => {
                         type="number"
                         min="0"
                         max="59"
-                        onChange={(e) => {
-                            setTimerMinuteSet(parseInt(e.target.value, 10));
-                        }}
+                        onChange={(e) => setTimerMinuteSet(parseInt(e.target.value, 10))}
                     />
                 </label>
                 <label>
@@ -163,9 +189,7 @@ const Timer = ({ db }) => {
                         type="number"
                         min="0"
                         max="59"
-                        onChange={(e) => {
-                            setTimerSecondSet(parseInt(e.target.value, 10));
-                        }}
+                        onChange={(e) => setTimerSecondSet(parseInt(e.target.value, 10))}
                     />
                 </label>
             </form>
