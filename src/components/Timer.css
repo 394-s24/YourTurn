@@ -74,3 +74,58 @@
     justify-content: center;
     margin: 5px 0;
 }
+
+.circle-timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.circle-svg {
+    width: 100px;
+    height: 100px;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: lightgrey;
+    stroke-width: 10;
+}
+
+.circle-fg {
+    fill: none;
+    stroke: lightblue;
+    stroke-width: 10;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.circle-timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.circle-svg {
+    width: 100px;
+    height: 100px;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: grey;
+    stroke-width: 10;
+}
+
+.circle-fg {
+    fill: none;
+    stroke: lightblue;
+    stroke-width: 10;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+

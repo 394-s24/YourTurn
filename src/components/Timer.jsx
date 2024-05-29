@@ -166,6 +166,13 @@ const Timer = ({ db }) => {
         </div>
     ));
 
+    const calculateDashArray = () => {
+        const radius = 45;
+        const circumference = 2 * Math.PI * radius;
+        const dashArray = ((time / (timerMinute * 60 + timerSecond)) * circumference).toFixed(3);
+        return `${dashArray} ${circumference}`;
+    };
+
     // Component render
     return (
         <div className="timer-wrapper">
@@ -177,9 +184,21 @@ const Timer = ({ db }) => {
             <div className="timer-text">
                 {formatTime(time)}
             </div>
+            <div className="circle-timer">
+                <svg className="circle-svg" viewBox="0 0 100 100">
+                    <circle className="circle-bg" cx="50" cy="50" r="45"></circle>
+                    <circle
+                        className="circle-fg"
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        style={{ strokeDasharray: calculateDashArray() }}
+                    ></circle>
+                </svg>
+            </div>
             <form className="set-timer-wrapper">
                 <label>
-                    Set Minute
+                    Set Minutes
                     <span> </span>
                     <input
                         className="set-timer-text"
@@ -191,7 +210,7 @@ const Timer = ({ db }) => {
                     />
                 </label>
                 <label>
-                    Set Second
+                    Set Seconds
                     <span> </span>
                     <input
                         className="set-timer-text"
