@@ -17,6 +17,7 @@ const Timer = ({ db }) => {
     const [users, setUsers] = useState([""]);
     const [roomCode, setRoomCode] = useState("");
     const [initialLoad, setInitialLoad] = useState(false);
+    const [warningTime, setWarningTime] = useState(2);
 
     const ref = useRef(null);
     const params = useParams();
@@ -81,17 +82,17 @@ const Timer = ({ db }) => {
 
     // Effect to handle timer warnings and completion
     useEffect(() => {
-        if (time === 120) {
+        if (time === (warningTime * 60)) {
             twoMinuteWarning();
         }
         if (time === 0) {
             timerComplete();
         }
-    }, [time]);
+    }, [time, warningTime]);
 
     // Timer warning and completion functions
     const twoMinuteWarning = () => {
-        toast('2 minutes remaining!');
+        toast(`${warningTime} minute(s) remaining!`);
         const sound = new Audio('../../public/sounds/twoMinuteWarning.mp3');
         sound.play();
     };
@@ -152,8 +153,17 @@ const Timer = ({ db }) => {
         setIsRunning(!isRunning);
     };
 
+    const deleteUser = (index) => {
+        let usersCopy = [...users];
+        usersCopy.splice(index, 1);
+        setUsers(usersCopy);
+    };
+
     const queueMembers = users.slice(1).map((user, index) => (
-        <p key={index}>{user}</p>
+        <div className="queue-member" key={index}>
+            <p>{user}</p>
+            <button className="delete-button" onClick={() => deleteUser(index + 1)}>Delete</button>
+        </div>
     ));
 
     // Component render
@@ -190,6 +200,17 @@ const Timer = ({ db }) => {
                         min="0"
                         max="59"
                         onChange={(e) => setTimerSecondSet(parseInt(e.target.value, 10))}
+                    />
+                </label>
+                <label>
+                    Set Warning Time (in minutes)
+                    <span> </span>
+                    <input
+                        className="set-timer-text"
+                        name="setWarningTime"
+                        type="number"
+                        min="0"
+                        onChange={(e) => setWarningTime(parseInt(e.target.value, 10))}
                     />
                 </label>
             </form>
