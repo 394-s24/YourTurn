@@ -93,6 +93,9 @@ To get a local copy up and running follow these simple example steps.
    ```sh
    firebase login
    ```
+Follow the instructions in the browser and use your Google account credentials to sign in.
+If you don't have a Google account, go to [Google Account](https://accounts.google.com/signup), fill in the required details such as First Name, Last Name, Username, and Password, and follow the prompts to verify your account.
+
 2. Initialize Firebase.
    ```sh
    firebase init
@@ -100,12 +103,11 @@ To get a local copy up and running follow these simple example steps.
 * What Firebase features do you want? Pick
     - Database for the Realtime Database
     - Hosting if you want to deploy your web app onto the Firebase server
-    - Firestore if you want to store images
-* What Firebase project to connect to? Pick the one you created. If you don't see it, follow these instructions.
+* What Firebase project to connect to? Pick the one you created. 
 * What is your public directory? Enter dist. Do not accept the default value "public".
 * Is this a single page webapp? Say Yes.
 * Overwrite dist/index.html? Say No.
-* Add Github Integration. Say No. If you need to do this, see these instructions.
+* Add Github Integration. Say No. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -118,7 +120,6 @@ Currently, there are no known bugs.
 ## Usage
 
 Start a swarm by entering your name and clicking 'Create New Swarm'. Alternatively, you can also enter a room code and click 'Join Swarm' to join an existing swarm. Once you're in, set the timer to your required duration and click 'Start'. You can then pause, resume and reset the timer at will. You can also enter the time at which you would like a warning for how many minutes are left in the rotation. View the queue right below the timer to see who's next. 
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
