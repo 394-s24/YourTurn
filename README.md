@@ -1,92 +1,180 @@
-# React Vitest Template
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
-A starter template for building React apps with Vite. Includes Vitest for unit testing and
-a hefty .gitignore file.
 
-# Requirements
 
-Node 20 or greater.
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
+
+A swarm rotation timer and more!
+* rotation timer alarm with two-minute warning
+* can customize timer duration and pause/resume at will
+* view queue to prepare in advance
+* one-click rotation order generation to ensure fair "who's on first"
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+### Built With
+
+* [![Node][Node.js]][Node-url]
+* [![Vite][Vite React Template]][vite-url]
+* [![Firebase][Firebase]][Firebase-url]
+* [![React][React.js]][React-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+These are instructions on setting up our project locally.
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/394-s24/YourTurn.git
+   ```
+2. Install NPM packages
+   ```sh
+   npm install
+   ```
+3. Add the firebase configuration
+   ```sh
+   const firebaseConfig = {
+   apiKey: "firebase API key here",
+   authDomain: "firebase domain here",
+   projectId: "firebase project id",
+   storageBucket: "firebase storage bucket",
+   messagingSenderId: "firebase messaging sender id",
+   appId: "firebase app id",
+   measurementId: "firebase measurement id"
+   };
+   ```
+   
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Firebase Configuration
+1. Login to Firebase.
+   ```sh
+   firebase login
+   ```
+2. Initialize Firebase.
+   ```sh
+   firebase init
+   ```
+* What Firebase features do you want? Pick
+    - Database for the Realtime Database
+    - Hosting if you want to deploy your web app onto the Firebase server
+    - Firestore if you want to store images
+* What Firebase project to connect to? Pick the one you created. If you don't see it, follow these instructions.
+* What is your public directory? Enter dist. Do not accept the default value "public".
+* Is this a single page webapp? Say Yes.
+* Overwrite dist/index.html? Say No.
+* Add Github Integration. Say No. If you need to do this, see these instructions.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Known Bugs
+Currently, there are no known bugs.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- USAGE EXAMPLES -->
 ## Usage
 
-```
-mkdir your-app-name
-cd your-app-name
-npx degit criesbeck/react-vitest
-npm install
-```
-If the third step hangs after printing ``> cloned criesbeck/react-vitest#HEAD``, 
-just control-C to exit then run ``npm install``.
-
-## Test
-
-Verify that the initial app works. Run
-
-```
-npm start
-```
-
-and open the URL displayed.
-
-Verify that the unit tests work with
-
-```
-npm test
-```
-
-Two tests should run and pass. 
-
-## Scripts
-
-**package.json** defines the following scripts:
-
-| Script           | Description                                         |
-| -----------------| --------------------------------------------------- |
-| npm start        | Runs the app in the development mode.               |
-| npm run dev      | Runs the app in the development mode.               |
-| npm run build    | Builds the app for production to the `dist` folder. |
-| npm run serve    | Serves the production build from the `dist` folder. |
-| npm test         | Starts a Jest-like test loop                        |
-| npm run coverage | Runs the tests, displays code coverage results      |
+Start a swarm by entering your name and clicking 'Create New Swarm'. Alternatively, you can also enter a room code and click 'Join Swarm' to join an existing swarm. Once you're in, set the timer to your required duration and click 'Start'. You can then pause, resume and reset the timer at will. You can also enter the time at which you would like a warning for how many minutes are left in the rotation. View the queue right below the timer to see who's next. 
 
 
-## Git
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-If everything is working, set up [your local and remote repositories](https://docs.github.com/en/get-started/importing-your-projects-to-github/importing-source-code-to-github/adding-locally-hosted-code-to-github#adding-a-local-repository-to-github-using-git).
+<!-- ROADMAP -->
+## Roadmap
 
-## Folder Structure
+- [x] Swarm Creation and Room Code Generation
+    - [x] Join or Leave Existing Swarm
+- [x] Set Timer Duration
+- [x] Start/Pause the Timer
+- [x] Set Time for Warning Notification
+    - [x] Visual + Audio Notification
+- [ ] Manually End a Swarm
 
-```
-your-app-name
-├── node_modules
-├── public
-│   ├── favicon.svg
-│   └── robots.txt
-└── src
-    ├── App.css
-    ├── App.jsx
-    ├── index.css
-    ├── index.jsx
-    └── logo.svg
-├── .gitignore
-├── index.html
-├── package.json
-├── README.md
-├── vite.config.js
-```
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Credits
-
-React-Vitest built and maintained by [Chris Riesbeck](https://github.com/criesbeck).
-
-Inspired by [SafdarJamal/vite-template-react](https://github.com/SafdarJamal/vite-template-react).
-Expanded to include Vitest and some sample tests.
-
-Thanks to Rich Harris for [degit](https://www.npmjs.com/package/degit).
-
-Gitignore file created with [the Toptal tool](https://www.toptal.com/developers/gitignore/api/react,firebase,visualstudiocode,macos,windows).
-
-
+<!-- LICENSE -->
 ## License
 
-This project is licensed under the terms of the [MIT license](./LICENSE).
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTACT -->
+## Contact
+
+Team Orange - Anoushka, Joel, Carol, Hong, Rachel, Eric
+
+Project Link: [https://github.com/394-s24/YourTurn](https://github.com/394-s24/YourTurn)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/394-s24/YourTurn.svg?style=for-the-badge
+[contributors-url]: https://github.com/394-s24/YourTurn/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/394-s24/YourTurn.svg?style=for-the-badge
+[forks-url]: https://github.com/394-s24/YourTurn/network/members
+[stars-shield]: https://img.shields.io/github/stars/394-s24/YourTurn.svg?style=for-the-badge
+[stars-url]: https://github.com/394-s24/YourTurn/stargazers
+[issues-shield]: https://img.shields.io/github/issues/394-s24/YourTurn.svg?style=for-the-badge
+[issues-url]: https://github.com/394-s24/YourTurn/issues
+[license-shield]: https://img.shields.io/github/license/394-s24/YourTurn.svg?style=for-the-badge
+[license-url]: https://github.com/394-s24/YourTurn/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/linkedin_username
+[product-screenshot]: images/screenshot.png
+[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[Next-url]: https://nextjs.org/
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Node.js]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
+[Node-url]: https://nodejs.org/
+[Firebase]: https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white
+[Firebase-url]: https://firebase.google.com/
+[Vite React Template]: https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=FFD400
+[vite-url]: https://vitejs.dev/
+
