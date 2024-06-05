@@ -1,3 +1,10 @@
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <h3 align="center">YourTurn</h3>
+</div>
+
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -29,7 +36,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![Create/Join Swarms](https://github.com/394-s24/YourTurn/assets/70890097/e0fcd287-ff3f-4a7d-bf00-3fa1037d2270)
+![Swarm Timer](https://github.com/394-s24/YourTurn/assets/70890097/5b7966b0-6f57-4a04-9fc5-46ed9df2227c)
 
 A swarm rotation timer and more!
 * rotation timer alarm with two-minute warning
@@ -73,7 +81,7 @@ To get a local copy up and running follow these simple example steps.
    ```sh
    npm install
    ```
-3. Add the firebase configuration
+3. Add the firebase configuration to App.jsx
    ```sh
    const firebaseConfig = {
    apiKey: "firebase API key here",
@@ -108,6 +116,8 @@ If you don't have a Google account, go to [Google Account](https://accounts.goog
 * Is this a single page webapp? Say Yes.
 * Overwrite dist/index.html? Say No.
 * Add Github Integration. Say No. 
+
+No starting data has to be imported into the database. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
