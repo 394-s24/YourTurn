@@ -3,7 +3,6 @@ import { getDatabase, ref as rref, onValue, update, child } from "firebase/datab
 import { useParams } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import './Timer.css';
-import names from '../names.json';
 
 const Timer = ({ db }) => {
     // State variables
